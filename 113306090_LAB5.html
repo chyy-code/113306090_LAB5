@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tfoot {
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <input type="number" id="math" placeholder="Math" min="0" max="100">
+        <input type="number" id="english" placeholder="English" min="0" max="100">
+        <button onclick="addGrade()">Submit</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Math</th>
+                <th>English</th>
+                <th>Average</th>
+            </tr>
+        </thead>
+        <tbody id="gradeTableBody">
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Average</td>
+                <td id="mathAverage">0.00</td>
+                <td id="englishAverage">0.00</td>
+                <td id="overallAverage">0.00</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        let rowCount = 0;
+        let totalMath = 0;
+        let totalEnglish = 0;
+
+        function addGrade() {
+            const mathInput = document.getElementById('math');
+            const englishInput = document.getElementById('english');
+
+            const mathGrade = parseFloat(mathInput.value);
+            const englishGrade = parseFloat(englishInput.value);
+
+            if (isNaN(mathGrade) || isNaN(englishGrade)) {
+                alert('Please enter valid numbers for both Math and English grades.');
+                return;
+            }
+
+            const rowAverage = ((mathGrade + englishGrade) / 2).toFixed(2);
+
+            rowCount++;
+            const tableBody = document.getElementById('gradeTableBody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${rowCount}</td>
+                <td>${mathGrade}</td>
+                <td>${englishGrade}</td>
+                <td>${rowAverage}</td>
+            `;
+            tableBody.appendChild(newRow);
+
+            totalMath += mathGrade;
+            totalEnglish += englishGrade;
+
+            updateAverages();
+
+            mathInput.value = '';
+            englishInput.value = '';
+        }
+
+        function updateAverages() {
+            const mathAverage = (totalMath / rowCount).toFixed(2);
+            const englishAverage = (totalEnglish / rowCount).toFixed(2);
+            const overallAverage = ((totalMath + totalEnglish) / (rowCount * 2)).toFixed(2);
+
+            document.getElementById('mathAverage').textContent = mathAverage;
+            document.getElementById('englishAverage').textContent = englishAverage;
+            document.getElementById('overallAverage').textContent = overallAverage;
+        }
+    </script>
+</body>
+</html>
